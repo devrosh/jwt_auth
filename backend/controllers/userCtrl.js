@@ -53,9 +53,12 @@ const loginUser = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
+    if (user) {
+      return res.json(user);
+    }
     const isValidPassword = await bcrypt.compare(password, user.password);
 
-    // Store refresh and access Token to the Cookies in the browser headers
+    // Generate & store refresh and access Token to the Cookies in the browser headers
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
@@ -63,14 +66,12 @@ const loginUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       secure: true,
       maxAge: 24 * 60 * 60 * 1000,
-      sameSite: "none",
     });
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: true,
       maxAge: 72 * 60 * 60 * 1000,
-      sameSite: "none",
     });
 
     if (user && isValidPassword) {

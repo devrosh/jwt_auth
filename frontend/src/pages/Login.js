@@ -2,9 +2,12 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setUser } from "../authSlice";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
@@ -18,7 +21,8 @@ const Login = () => {
         "http://localhost:8080/api/user/login",
         data
       );
-      console.log(response.data);
+      dispatch(setUser(response.data));
+
       navigate("/profile"); // Handle success response
     } catch (error) {
       console.error(error);

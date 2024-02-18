@@ -2,8 +2,10 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+
 const Register = () => {
   const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
@@ -25,7 +27,6 @@ const Register = () => {
         "http://localhost:8080/api/user/register",
         formData
       );
-      console.log(response.data);
 
       navigate("/login"); // Handle success response
     } catch (error) {

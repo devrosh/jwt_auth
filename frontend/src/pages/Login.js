@@ -4,19 +4,22 @@ import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setUser } from "../authSlice";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = React.useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async (data, e) => {
+  const onSubmit = async (data) => {
     try {
-      e.preventDefault();
+      setIsLoading(true);
+
       const response = await axios.post(
         "http://localhost:8080/api/user/login",
         data
@@ -26,6 +29,8 @@ const Login = () => {
       navigate("/profile"); // Handle success response
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,7 +61,7 @@ const Login = () => {
         className="bg-blue-600 w-full p-2 my-1 rounded text-white"
         type="submit"
       >
-        Login
+        {isLoading ? <LoadingSpinner /> : "Login"}
       </button>
       <div className="flex flex-col gap-3">
         <span>

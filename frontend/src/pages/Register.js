@@ -2,20 +2,22 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Register = () => {
   const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
 
     formState: { errors },
   } = useForm();
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  const onSubmit = async (data, e) => {
+  const onSubmit = async (data) => {
     try {
-      e.preventDefault();
+      setIsLoading(true);
+
       const formData = new FormData();
       formData.append("firstName", data.firstName);
       formData.append("lastName", data.lastName);
@@ -31,6 +33,8 @@ const Register = () => {
       navigate("/login"); // Handle success response
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,7 +99,7 @@ const Register = () => {
         className="bg-blue-600 w-full p-2 my-2 rounded text-white"
         type="submit"
       >
-        Register
+        {isLoading ? <LoadingSpinner /> : "Register"}
       </button>
       <span>
         Already have an account?{" "}
